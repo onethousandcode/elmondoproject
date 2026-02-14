@@ -18,3 +18,20 @@ yarn-error.log*
 # OS files
 .DS_Store
 Thumbs.db
+
+# Flutter
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
