@@ -1,9 +1,8 @@
-version: "3.9"
-
 services:
-  mysql:
+  lms-mysql:
     image: mysql:8
     container_name: lms-mysql
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: lms
@@ -12,7 +11,22 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+    test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+    interval: 5s
+    retries: 5  
+
+  backend:
+    build: ./backend
+    container_name: elmondoproject
+    restart: always
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - lms-mysql
 
 volumes:
-  mysql_data:
+  mysql-data:
