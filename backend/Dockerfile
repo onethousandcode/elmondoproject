@@ -1,23 +1,28 @@
-# Use official Node.js LTS image
-FROM node:20-alpine
+# Stage 1: Build Flutter web
+FROM cirrusci/flutter:stable AS build
 
-# Set working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy package.json and package-lock.json first (for caching)
-COPY package*.json ./
+# Copy pubspec first to leverage Docker cache
+COPY pubspec.* ./
+RUN flutter pub get
 
-# Install dependencies
-RUN npm install --legacy-peer-deps
+# Copy the rest of your code
+COPY . ./
 
-# Copy the rest of the source code
-COPY . .
+# Build the web app
+RUN flutter build web --release
 
-# Build the NestJS app
-RUN npm run build
+# Stage 2: Serve with Nginx
+FROM nginx:alpine
 
-# Expose NestJS port
-EXPOSE 4000
+# Remove default nginx content
+RUN rm -rf /usr/share/nginx/html/*
 
-# Start in production mode
-CMD ["npm", "run", "start:prod"]
+# Copy built web app from previous stage
+COPY --from=build /app/build/web /usr/share/nginx/html
+
+# Expose port 5000
+EXPOSE 5000
+
+CMD ["nginx", "-g", "daemon off;"]

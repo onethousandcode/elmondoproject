@@ -19,7 +19,7 @@ import { AuthModule } from './auth/auth.module';
   inject: [ConfigService],
   useFactory: async (configService: ConfigService) => ({
     type: 'mysql' as const,
-    host: configService.get<string>('DB_HOST', 'lms-mysql'),
+    host: configService.get<string>('DB_HOST', 'database'),
     port: parseInt(configService.get<string>('DB_PORT', '3306')),
     username: configService.get<string>('DB_USER', 'lms'),
     password: configService.get<string>('DB_PASSWORD', 'lms'),
