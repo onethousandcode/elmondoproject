@@ -29,7 +29,7 @@ services:
       database:
         condition: service_healthy
     command: npm run start:prod
-
+  
   frontend:
     build: .
     container_name: frontend

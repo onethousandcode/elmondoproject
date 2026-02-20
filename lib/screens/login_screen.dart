@@ -28,9 +28,6 @@ class _LoginScreenState extends State<LoginScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(() {
-      setState(() {}); // Refresh to update IndexedStack
-    });
   }
 
   @override
@@ -146,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen>
     return Scaffold(
       body: Row(
         children: [
-          // Left branding/details panel with logo
+          // Left branding panel
           Expanded(
             flex: 1,
             child: Container(
@@ -154,11 +151,10 @@ class _LoginScreenState extends State<LoginScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Logo / image
                   Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Image.asset(
-                      'assets/logo.png', // <-- replace with your logo path
+                      'assets/logo.png',
                       width: 150,
                       height: 150,
                     ),
@@ -176,7 +172,8 @@ class _LoginScreenState extends State<LoginScreen>
                   Text(
                     "Jumpstart your learning journey with us!",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18, color: Colors.blueGrey.shade600),
+                    style:
+                        TextStyle(fontSize: 18, color: Colors.blueGrey.shade600),
                   ),
                 ],
               ),
@@ -194,7 +191,6 @@ class _LoginScreenState extends State<LoginScreen>
                     : Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Tabs
                           TabBar(
                             controller: _tabController,
                             tabs: [
@@ -205,13 +201,14 @@ class _LoginScreenState extends State<LoginScreen>
                             unselectedLabelColor: Colors.grey,
                           ),
                           SizedBox(height: 16),
-                          // Forms
-                          IndexedStack(
-                            index: _tabController.index,
-                            children: [
-                              loginForm(),
-                              signupForm(),
-                            ],
+                          Expanded(
+                            child: TabBarView(
+                              controller: _tabController,
+                              children: [
+                                SingleChildScrollView(child: loginForm()),
+                                SingleChildScrollView(child: signupForm()),
+                              ],
+                            ),
                           ),
                         ],
                       ),
